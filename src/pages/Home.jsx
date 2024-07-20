@@ -1,14 +1,16 @@
 // import doctorSVG from "../assets/svg/doctor_illustration.svg";
 import { CTASection } from "../components/CTASection";
 import { FeatureSection } from "../components/FeatureSection";
+import { Footer } from "../components/Footer";
 import { HeroSection } from "../components/HeroSection";
 // import { Button } from "../components/button/Button";
 export const Home = () => {
   return (
-    <div className="">
+    <div>
       <HeroSection/>
       <FeatureSection/>
       <CTASection/>
+      <Footer/>
     </div>
     // <div className="container mx-auto h-screen font-lato">
     //   <h1 className="text-center py-16 font-bold text-6xl text-cyan-500">

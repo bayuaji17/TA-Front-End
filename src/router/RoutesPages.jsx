@@ -8,6 +8,7 @@ import { RulesDisease } from "../pages/admin/rules/RulesDisease";
 import { Patient } from "../pages/admin/patient/Patient";
 import { NotFound } from "../pages/NotFound";
 import { Questionnaire } from "../pages/user/Questionnaire";
+import { PagesTest } from "../pages/PagesTest";
 
 export const RoutesPages = () => {
   return (
@@ -24,6 +25,7 @@ export const RoutesPages = () => {
         {/*End Admin Area Page */}
         {/* User Area Pages */}
 
+        <Route path="/testing" element={<PagesTest />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
         {/* End User Area Pages */}
         <Route path="*" element={<NotFound />} />

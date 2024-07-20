@@ -3,7 +3,7 @@ import { Sidebar } from "../../components/sidebar/Sidebar";
 export const Layout = ({ children }) => {
   return (
     <>
-      <div className=" max-h-screen flex">
+      <div className="max-h-screen flex">
         <div className="flex-none">
           <Sidebar />
         </div>
