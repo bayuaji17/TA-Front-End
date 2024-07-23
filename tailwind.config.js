@@ -7,7 +7,8 @@ export default {
   theme: {
     fontFamily: {
       lato: ["Lato", "sans-serif"],
-      patua: ["Patua One", "serif"]
+      patua: ["Patua One", "serif"],
+      inter: ["Inter", "sans-serif"]
     },
     extend: {
       container: {

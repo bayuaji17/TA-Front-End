@@ -5,7 +5,6 @@ export const RadioButton = ({
   id,
   value,
   onChange,
-  required,
   borderColor,
   className,
 }) => {
@@ -18,7 +17,7 @@ export const RadioButton = ({
         value={value}
         onChange={onChange}
         className="peer hidden"
-        required={required}
+        
       />
       <label
         htmlFor={id}
@@ -34,9 +33,8 @@ RadioButton.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   className: PropTypes.string,
   borderColor: PropTypes.string,
-  required: PropTypes.bool,
   onChange: PropTypes.func,
 };

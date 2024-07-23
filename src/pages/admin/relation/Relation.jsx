@@ -1,30 +1,20 @@
-import { Navbar } from "../../../components/navbar/Navbar";
-import { Layout } from "../Layout";
-import useFetch from "../../../services/useFetch";
-import { useRef, useState } from "react";
-import { AddSymptom } from "../../../components/AddSymptom";
-import { ConfirmModal } from "../../../components/ConfirmModal";
-import { deleteSymptoms } from "../../../services/symptom";
-import { toast } from "react-toastify";
-import { EditSymptom } from "../../../components/EditSymptom";
-import { putSymptoms } from "../../../services/symptom";
 import { useSWRConfig } from "swr";
+import { Navbar } from "../../../components/navbar/Navbar";
+import useFetch from "../../../services/useFetch";
+import { Layout } from "../Layout";
+import { useRef, useState } from "react";
+import { AddRelations } from "../../../components/AddRelations";
 
-export const Symptom = () => {
+export const Relation = () => {
   const [page, setPage] = useState(1);
   const dialogRef = useRef(null);
-  const [isConfirmOpen, setConfirmOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedSymptom, setSelectedSymptom] = useState(null);
-  const { data, error, isLoading } = useFetch(`/symptoms?page=${page}&limit=7`);
-  const { mutate } = useSWRConfig();
+  const { data, isLoading } = useFetch(`/relation?page=${page}&limit=7`);
+  const { data: dataDisease } = useFetch(`/disease`);
+  console.log(dataDisease, "dari dataDisease");
+  //   const { mutate } = useSWRConfig();
+  console.log(data);
   const totalPages = data?.pagination?.totalPages;
   const offset = data?.pagination?.offset;
-
-  if (error) {
-    return "error";
-  }
-
   const handlePrev = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -39,11 +29,11 @@ export const Symptom = () => {
   const tableHead = [
     "No",
     "Symptom Code",
-    "Symptom Name",
-    "Questions",
+    "Disease Code",
+    "CF Value",
+    "Disease Name",
     "Action",
   ];
-
   const handleCancel = () => {
     if (dialogRef.current) {
       dialogRef.current.close();
@@ -56,73 +46,18 @@ export const Symptom = () => {
     }
   };
 
-  const deleteSymptom = (id) => {
-    setSelectedSymptom(id);
-    setConfirmOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      const response = await deleteSymptoms(selectedSymptom);
-      toast.success(response.data?.message);
-      setConfirmOpen(false);
-      mutate(`/symptoms?page=${page}&limit=7`);
-    } catch (error) {
-      setConfirmOpen(false);
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setConfirmOpen(false);
-    setSelectedSymptom(null);
-  };
-  // * EDIT
-
-  const editSymptom = (id) => {
-    setSelectedSymptom(id);
-    setIsEditOpen(true);
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditOpen(false);
-    setSelectedSymptom(null);
-  };
-
-  const handleEditSubmit = async (updatedSymptom) => {
-    try {
-      const response = await putSymptoms(selectedSymptom, updatedSymptom);
-      toast.success(response.data?.message);
-      mutate(`/symptoms?page=${page}&limit=7`);
-      setIsEditOpen(false);
-    } catch (error) {
-      toast.error(error.response?.data?.status);
-      setIsEditOpen(false);
-    }
-  };
-
   return (
     <div>
-      <AddSymptom ref={dialogRef} onClick={handleCancel} page={page} />
-      <ConfirmModal
-        isOpen={isConfirmOpen}
-        onClose={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-      />
-      <EditSymptom
-        isOpen={isEditOpen}
-        onClose={handleCancelEdit}
-        onSubmit={handleEditSubmit}
-        initialData={selectedSymptom}
-      />
+      <AddRelations ref={dialogRef} onClick={handleCancel} />
       <Layout>
         <Navbar />
-        <div className="m-10">
+        <main className="m-10">
           <div className="inline-flex justify-end w-full mb-2 ">
             <button
               className="border-2 border-cyan-700 rounded-lg h-10 w-32 hover:bg-cyan-600 hover:text-white hover:font-bold hover:border-none"
               onClick={openDialog}
             >
-              Add Symptom
+              Add Relation
             </button>
           </div>
           <div className="border rounded-lg w-[75dvw] h-[65dvh] overflow-scroll">
@@ -146,30 +81,33 @@ export const Symptom = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {data?.data?.map((id_gejala, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 w-[10%] border-r-2 whitespace-normal text-sm font-medium text-gray-800 ">
+                      <td className="px-6 py-4 w-[5%] whitespace-normal text-sm font-medium text-gray-800 ">
                         {offset + index + 1}
                       </td>
-                      <td className="px-6 py-4 w-[10%] border-r-2 whitespace-normal text-sm text-gray-800 ">
+                      <td className="px-6 py-4 w-[10%] whitespace-normal text-sm text-gray-800 ">
                         {id_gejala.kode_gejala}
                       </td>
                       <td className="px-6 py-4 w-[20%] whitespace-normal text-sm text-gray-800 ">
-                        {id_gejala.nama_gejala}
+                        {id_gejala.kode_penyakit}
                       </td>
-                      <td className="px-6 py-4 w-[40%] whitespace-normal text-sm text-gray-800 ">
-                        {id_gejala.pertanyaan}
+                      <td className="px-6 py-4 w-[15%] whitespace-normal text-sm text-gray-800 ">
+                        {id_gejala.nilai_cf}
+                      </td>
+                      <td className="px-6 py-4 w-[30%] whitespace-normal text-sm text-gray-800 ">
+                        {id_gejala.nama_penyakit}
                       </td>
                       <td className="px-6 py-4 w-[20%] whitespace-nowrap text-sm font-medium">
                         <button
                           type="button"
                           className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none pr-3"
-                          onClick={() => editSymptom(id_gejala.id_gejala)}
+                          //   onClick={() => editSymptom(id_gejala.id_gejala)}
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none"
-                          onClick={() => deleteSymptom(id_gejala.id_gejala)}
+                          //   onClick={() => deleteSymptom(id_gejala.id_gejala)}
                         >
                           Delete
                         </button>
@@ -196,7 +134,7 @@ export const Symptom = () => {
               Next
             </button>
           </div>
-        </div>
+        </main>
       </Layout>
     </div>
   );

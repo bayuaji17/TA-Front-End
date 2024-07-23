@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 export const Sidebar = () => {
   return (
     <aside>
-      <div className="w-72 h-screen font-lato bg-cyan-500">
+      <div className="w-72 min-h-screen font-lato bg-cyan-500">
         <ul className="p-4 pt-8">
           <li className="text-center mb-14 text-2xl uppercase font-bold p-2 text-white ">
             Sistem Pakar Kesehatan Mental

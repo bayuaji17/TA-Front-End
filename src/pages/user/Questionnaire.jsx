@@ -1,132 +1,163 @@
-import { useState } from "react";
 import { Card } from "../../components/card/Card";
 import { LayoutQuestion } from "./LayoutQuestion";
 import { RadioButton } from "../../components/formRadio/RadioButton";
 import { Button } from "../../components/button/Button";
+import { FormInput } from "../../components/form/FormInput";
+import { FormSelect } from "../../components/form/FormSelect";
+import useFetch from "../../services/useFetch";
+import { useState } from "react";
+import { postAnswers } from "../../services/users";
+import { useNavigate } from "react-router-dom";
 
 export const Questionnaire = () => {
-  const questions = [
-    {
-      id: 1,
-      question:
-        "Saya merasa bahwa diri saya menjadi marah karena hal-hal sepele.?",
-    },
-    {
-      id: 2,
-      question: "Saya merasa mulut saya sering kering ?",
-    },
-    {
-      id: 3,
-      question: "Saya sama sekali tidak dapat merasakan perasaan positif.",
-    },
-    {
-      id: 4,
-      question:
-        "Saya mengalami kesulitan bernafas (misalnya: sering kali terengah-engah atau tidak dapat bernafas padahal tidak melakukan aktivitas fisik sebelumnya).",
-    },
-    {
-      id: 5,
-      question:
-        "Saya sepertinya tidak kuat lagi untuk melakukan suatu kegiatan.",
-    },
-  ];
+  const [formQuestions, setFormQuestions] = useState({
+    nama: "",
+    umur: 0,
+    jenisKelamin: "Pria",
+    answers: [],
+  });
+  const navigate = useNavigate();
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
+  const handleInputChange = (e) => {
+    const { id, value, type } = e.target;
+    setFormQuestions((prevFormQuestions) => ({
+      ...prevFormQuestions,
+      [id]: type === "number" ? Number(value) : value,
+    }));
   };
 
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+  const handleAnswerChange = (e, questionId, answerValue) => {
+    setFormQuestions((prevFormQuestions) => {
+      const updatedAnswers = [...prevFormQuestions.answers];
+      const answerIndex = updatedAnswers.findIndex(
+        (answer) => answer.questionId === questionId
+      );
+
+      if (answerIndex >= 0) {
+        updatedAnswers[answerIndex].answer = answerValue;
+      } else {
+        updatedAnswers.push({ questionId, answer: answerValue });
+      }
+
+      return { ...prevFormQuestions, answers: updatedAnswers };
+    });
+  };
+
+  console.log(formQuestions);
+  const { data: dataQuestions } = useFetch("/symptoms?page=1&limit=100");
+  const jenisKelamin = [
+    { label: "Pria", value: "Pria" },
+    { label: "Wanita", value: "Wanita" },
+  ];
+
+  const handleSubmit = async () => {
+    try {
+      const response = await postAnswers(formQuestions);
+      navigate("/result")
+      localStorage.setItem('resultUsers', JSON.stringify(response.data))
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
-    <div className=" h-screen">
+    <div>
       <LayoutQuestion>
         <Card
           className={
-            "w-[80dvw] h-[80dvh] mx-auto border-cyan-500 p-10 mt-10  backdrop-blur-xl backdrop-filter bg-white bg-opacity-10"
+            "w-[80dvw] h-96 mx-auto border-cyan-500 py-5 px-10 mt-10 bg-white"
           }
         >
-          {questions.map(
-            (question, index) =>
-              index === currentQuestionIndex && (
-                <div key={question.id}>
-                  <p className="font-lato font-medium text-base">
-                    Pertanyaan ke 1 dari 21
-                  </p>
-                  <div className="max-w-4xl mx-auto">
-                    <h1 className="text-4xl text-center text-slate-800 font-patua mt-8 mb-14 ">
-                      {question.question}
-                    </h1>
-                  </div>
-                  <div className="flex flex-row flex-wrap justify-center gap-y-5">
-                    <RadioButton
-                      label={"Tidak Pernah"}
-                      name={"answer"}
-                      id={"0"}
-                      value={"0"}
-                      borderColor={"border-cyan-500"}
-                      className={"text-center "}
-                    />
-                    <RadioButton
-                      label={"Kadang Kadang"}
-                      name={"answer"}
-                      id={"1"}
-                      value={"1"}
-                      borderColor={"border-cyan-500"}
-                      className={"text-center "}
-                    />
-                    <RadioButton
-                      label={"Sering Sekali"}
-                      name={"answer"}
-                      id={"2"}
-                      value={"2"}
-                      borderColor={"border-cyan-500"}
-                      className={"text-center "}
-                    />
-                    <RadioButton
-                      label={"Sangat Sering"}
-                      name={"answer"}
-                      id={"3"}
-                      value={"3"}
-                      borderColor={"border-cyan-500"}
-                      className={"text-center "}
-                    />
-                  </div>
-                </div>
-              )
-          )}
-          <div className="flex flex-row gap-4 mt-8 w-full justify-end">
-            <Button
-              label={"Previous"}
-              width={"w-32"}
+          <div className="flex flex-col w-full">
+            <FormInput
+              label={"nama"}
+              type={"text"}
+              name={"Nama"}
+              placeholder={"Input Your Name or Inisial"}
               height={"h-10"}
-              variant={"bg-red-500"}
-              textColor={"text-white"}
-              fontBold={"font-bold"}
-              borderRadius={"rounded-lg"}
-              onClick={handlePrevious}
-              // disabled={currentQuestionIndex === 0}
+              width={"w-32"}
+              onChange={handleInputChange}
             />
-            <Button
-              label={"Next"}
-              width={"w-32"}
+            <FormInput
+              label={"umur"}
+              type={"number"}
+              name={"Umur"}
+              placeholder={"Input Your Age"}
               height={"h-10"}
-              variant={"bg-cyan-500"}
-              textColor={"text-white"}
-              fontBold={"font-bold"}
-              borderRadius={"rounded-lg"}
-              onClick={handleNext()}
-              // disabled={currentQuestionIndex === questions.length - 1}
+              width={"w-32"}
+              onChange={handleInputChange}
+            />
+            <FormSelect
+              label={"jenisKelamin"}
+              name={"Jenis Kelamin"}
+              options={jenisKelamin}
+              onChange={handleInputChange}
             />
           </div>
         </Card>
+        {dataQuestions?.data?.map((questions, index) => (
+          <div key={index}>
+            <Card className={"mt-4 w-[80dvw] h-96 mx-auto p-4 border-black bg-white"}>
+              <h1 className="sm:text-lg lg:text-2xl text-center">
+                {questions.pertanyaan}
+              </h1>
+              <div className="flex flex-row flex-wrap justify-center">
+                <RadioButton
+                  label={"Tidak Pernah"}
+                  name={questions.kode_gejala}
+                  id={`1-${questions.kode_gejala}`}
+                  value={0}
+                  onChange={(e) =>
+                    handleAnswerChange(e, questions.kode_gejala, 0)
+                  }
+                />
+                <RadioButton
+                  label={"Kadang Kadang"}
+                  name={questions.kode_gejala}
+                  id={`2-${questions.kode_gejala}`}
+                  value={0.33}
+                  onChange={(e) =>
+                    handleAnswerChange(e, questions.kode_gejala, 0.33)
+                  }
+                />
+                <RadioButton
+                  label={"Lumayan Sering"}
+                  name={questions.kode_gejala}
+                  id={`3-${questions.kode_gejala}`}
+                  value={0.67}
+                  onChange={(e) =>
+                    handleAnswerChange(e, questions.kode_gejala, 0.67)
+                  }
+                />
+                <RadioButton
+                  label={"Sering Sekali"}
+                  name={questions.kode_gejala}
+                  id={`4-${questions.kode_gejala}`}
+                  value={1}
+                  onChange={(e) =>
+                    handleAnswerChange(e, questions.kode_gejala, 1)
+                  }
+                />
+              </div>
+            </Card>
+          </div>
+        ))}
+        <div className="w-full mx-auto inline-flex justify-end lg:px-44">
+          <Button
+            type={"submit"}
+            label={"Submit"}
+            variant={"bg-cyan-600"}
+            className={
+              "tracking-wider uppercase shadow-lg hover:scale-105 transition-all duration-[650ms] mb-14"
+            }
+            textColor={"text-white"}
+            fontBold={"font-bold"}
+            width={"w-28"}
+            height={"h-10"}
+            borderRadius={"rounded-lg"}
+            onClick={handleSubmit}
+          />
+        </div>
       </LayoutQuestion>
     </div>
   );

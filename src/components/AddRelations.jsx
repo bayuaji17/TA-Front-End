@@ -1,20 +1,14 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
 import { FormInput } from "./form/FormInput";
-import { postSymptom } from "../services/symptom";
-import { toast } from "react-toastify";
-import useFetch from "../services/useFetch";
-import { useSWRConfig } from "swr";
 
-export const AddSymptom = React.forwardRef(({ onClick,page }, ref) => {
+export const AddRelations = React.forwardRef(({ onClick }, ref) => {
   const [formData, setFormData] = useState({
     kode_gejala: "",
-    nama_gejala: "",
-    pertanyaan: "",
+    kode_penyakit: "",
+    nilai_cf: 0,
   });
 
-  useFetch(`/symptoms?page=${page}&limit=7`);
-  const {mutate} = useSWRConfig()
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({
@@ -22,26 +16,19 @@ export const AddSymptom = React.forwardRef(({ onClick,page }, ref) => {
       [id]: value,
     });
   };
-
-  const handleSubmit = async () => {
-    try {
-      const response = await postSymptom(formData);
-      console.log(response);
-      toast.success(response?.data?.message)
-      if (ref.current) {
-        ref.current.close();
-      }
-      mutate(`/symptoms?page=${page}&limit=7`)
-    } catch (error) {
-        toast.error(error.response?.data?.status);
-      if (ref.current) {
-        ref.current.close();
-      }
-    }
+  const handleParseInt = (e) => {
+    const { id, value } = e.target;
+    setFormData(
+      parseInt({
+        ...formData,
+        [id]: value,
+      })
+    );
   };
 
   return (
     <div>
+      {" "}
       <dialog
         ref={ref}
         className="h-[80dvh] w-[45rem] border-2 border-black rounded-2xl p-5"
@@ -64,24 +51,24 @@ export const AddSymptom = React.forwardRef(({ onClick,page }, ref) => {
           placeholder={"Insert Symptom Name"}
           width={"w-full"}
           height={"h-11"}
-          value={formData.nama_gejala}
+          value={formData.kode_penyakit}
           onChange={handleInputChange}
         />
         <FormInput
-          type={"text"}
-          label={"pertanyaan"}
-          name={"Questions"}
+          type={"number"}
+          label={"nilai_cf"}
+          name={"CF Value"}
           placeholder={"Insert Questions for Symptom"}
           width={"w-full"}
           height={"h-11"}
-          value={formData.pertanyaan}
-          onChange={handleInputChange}
+          value={formData.nilai_cf}
+          onChange={handleParseInt}
         />
         <div className="h-28 flex justify-end items-end">
           <button
             className="border-2 w-24 h-10 border-black rounded-xl hover:bg-cyan-600 hover:text-white hover:font-bold hover:border-none"
             type="submit"
-            onClick={handleSubmit}
+            // onClick={handleSubmit}
           >
             Submit
           </button>
@@ -98,9 +85,9 @@ export const AddSymptom = React.forwardRef(({ onClick,page }, ref) => {
   );
 });
 
-AddSymptom.displayName = "AddSymptom";
+AddRelations.displayName = "AddRelations";
 
-AddSymptom.propTypes = {
+AddRelations.propTypes = {
   onClick: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
 };

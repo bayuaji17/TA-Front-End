@@ -16,5 +16,5 @@ export const Card = ({ children, className }) => {
 
 Card.propTypes = {
   children: PropTypes.node.isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
