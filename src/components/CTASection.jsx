@@ -4,7 +4,7 @@ export const CTASection = () => {
     <div className="container mb-10">
       <div className="flex flex-col gap-16 items-center">
         <h1 className="text-center text-2xl md:text-3xl mt-10 font-lato text-cyan-800 font-bold">
-          Ambil Langkah Menuju Pikiran yang Lebih Sehat.
+          Ambil Langkah Menuju Pikiran yang Lebih Sehat
           <br /> Cek Gratis Sekarang!
         </h1>
         <a href="/questionnaire">

@@ -10,8 +10,8 @@ export const FeatureSection = () => {
   return (
     <div className="bg-cyan-500 lg:max-h-[40rem]">
       <div className="container mx-auto h-[36rem] lg:h-[30rem] font-lato">
-        <h1 className="text-center font-bold text-4xl text-white py-10 mt-10">
-          Our Feature
+        <h1 className="text-center font-bold text-4xl text-white py-10 mt-10 uppercase">
+          Fitur
         </h1>
         <div className="lg:flex max-w-full my-5">
           <div className="lg:w-1/2">

@@ -9,7 +9,7 @@ export const RadioButton = ({
   className,
 }) => {
   return (
-    <div className="flex flex-col mt-5 ml-20 font-lato">
+    <div className="flex flex-col font-lato">
       <input
         type="radio"
         name={name}
@@ -21,7 +21,7 @@ export const RadioButton = ({
       />
       <label
         htmlFor={id}
-        className={`border-2 ${borderColor} w-96 p-4 rounded-2xl font-semibold text-xl hover:bg-cyan-600 hover:text-white  peer-checked:bg-cyan-600 peer-checked:text-white ${className}`}
+        className={`border-2 ${borderColor} md:w-64 lg:w-72 p-4 rounded-2xl font-semibold text-sm sm:text-lg md:text-xl hover:bg-cyan-600 hover:text-white  peer-checked:bg-cyan-600 peer-checked:text-white ${className} text-center cursor-pointer`}
       >
         {label}
       </label>

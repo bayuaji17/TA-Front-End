@@ -19,7 +19,7 @@ export const RoutesPages = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/admin" element={<Login />} />
+        <Route path="/loginadmin" element={<Login />} />
         {/* Admin Area Page */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/symptom" element={<Symptom />} />

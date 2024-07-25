@@ -5,6 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    // screens: {
+    //   'xs': '320px',
+    // },
     fontFamily: {
       lato: ["Lato", "sans-serif"],
       patua: ["Patua One", "serif"],

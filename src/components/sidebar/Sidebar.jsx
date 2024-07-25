@@ -1,14 +1,25 @@
 import {
   House,
+  SignOut,
   Stethoscope,
   Thermometer,
   Users,
   Virus,
   WebhooksLogo,
 } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { CookieKeys, CookieStorage } from "../../utils/cookies";
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    CookieStorage.remove(CookieKeys.AuthToken);
+    toast.success("Sign Out Success !");
+    navigate("/loginadmin");
+  };
+
   return (
     <aside>
       <div className="w-72 min-h-screen font-lato bg-cyan-500">
@@ -81,26 +92,37 @@ export const Sidebar = () => {
               }`}
             >
               <span className="flex items-center gap-4 font-medium text-white">
-              <WebhooksLogo size={28} color="white" weight="light" />
+                <WebhooksLogo size={28} color="white" weight="light" />
                 Relation
               </span>
             </li>
           </Link>
-          <Link to={"/patient"}>
+          {/* <Link to={"/patient"}>
             <li
-              className={`h-14 my-4 py-3 text-lg hover:border-2 rounded-3xl px-4 border-black  hover:cursor-pointer transition duration-300 hover:shadow-[0.4rem_0.4rem_0_rgba(0,0,0,0.8)] ${
-                location.pathname == "/patient"
-                  ? "border-2 border-cyan-800 shadow-[0.4rem_0.4rem_0_rgb(22,78,99)]"
-                  : ""
+            className={`h-14 my-4 py-3 text-lg hover:border-2 rounded-3xl px-4 border-black  hover:cursor-pointer transition duration-300 hover:shadow-[0.4rem_0.4rem_0_rgba(0,0,0,0.8)] ${
+              location.pathname == "/patient"
+              ? "border-2 border-cyan-800 shadow-[0.4rem_0.4rem_0_rgb(22,78,99)]"
+              : ""
               }`}
-            >
+              >
               <span className="flex items-center gap-4 font-medium text-white">
-                <Users size={28} color="white" weight="light" />
+              <Users size={28} color="white" weight="light" />
                 Patient
               </span>
             </li>
-          </Link>
+            </Link> */}
         </ul>
+        <div className="w-72 p-4 pt-8">
+          <div
+            className={`h-14 my-4 py-3 text-lg hover:border-2 rounded-3xl px-4 border-black hover:cursor-pointer transition duration-300 hover:shadow-[0.4rem_0.4rem_0_rgba(0,0,0,0.8)] shadow-[0.4rem_0.4rem_0_rgb(22,78,99)]}`}
+            onClick={handleSignOut}
+          >
+            <span className="flex items-center gap-4 font-medium text-white">
+              <SignOut size={28} color="white" weight="regular" />
+              Sign Out
+            </span>
+          </div>
+        </div>
       </div>
     </aside>
   );
