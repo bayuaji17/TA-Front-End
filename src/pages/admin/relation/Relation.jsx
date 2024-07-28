@@ -4,17 +4,25 @@ import useFetch from "../../../services/useFetch";
 import { Layout } from "../Layout";
 import { useRef, useState } from "react";
 import { AddRelations } from "../../../components/AddRelations";
+import { ConfirmModal } from "../../../components/ConfirmModal";
+import { deletedRelation, putRelation } from "../../../services/symptom";
+import { toast } from "react-toastify";
+import { EditRelations } from "../../../components/EditRelations";
 
 export const Relation = () => {
   const [page, setPage] = useState(1);
   const dialogRef = useRef(null);
+  const [selectedRelation, setSelectedRelation] = useState(null);
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { data, isLoading } = useFetch(`/relation?page=${page}&limit=7`);
+  const { data: dataSymptom } = useFetch("/symptoms?page=1&limit=100");
   const { data: dataDisease } = useFetch(`/disease`);
-  console.log(dataDisease, "dari dataDisease");
-  //   const { mutate } = useSWRConfig();
-  console.log(data);
+
+  const { mutate } = useSWRConfig();
   const totalPages = data?.pagination?.totalPages;
   const offset = data?.pagination?.offset;
+
   const handlePrev = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -45,10 +53,73 @@ export const Relation = () => {
       dialogRef.current.showModal();
     }
   };
+  // *DELETE
+  const deleteRelation = (id) => {
+    setSelectedRelation(id);
+    setConfirmOpen(true);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await deletedRelation(selectedRelation);
+      console.log(response);
+      toast.success(response.data?.message);
+      setConfirmOpen(false);
+      mutate(`/relation?page=${page}&limit=7`);
+    } catch (error) {
+      setConfirmOpen(false);
+      toast.error("error");
+    }
+  };
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
+    setSelectedRelation(null);
+  };
+  // *DELETE
+  // * EDIT
+  const EditRelation = (id) => {
+    setSelectedRelation(id);
+    setIsEditOpen(true);
+  };
 
+  const handleCancelEdit = () => {
+    setIsEditOpen(false);
+    setSelectedRelation(null);
+    mutate(`/relation?page=${page}&limit=7`);
+  };
+  const handleEditSubmit = async (updatedRelation) => {
+    try {
+      const response = await putRelation(selectedRelation, updatedRelation);
+      toast.success(response.data?.message);
+      mutate(`/relation?page=${page}&limit=7`);
+      setIsEditOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.status);
+      setIsEditOpen(false);
+    }
+  };
+
+  // * EDIT
   return (
     <div>
-      <AddRelations ref={dialogRef} onClick={handleCancel} />
+      <AddRelations
+        ref={dialogRef}
+        onClick={handleCancel}
+        dataDisease={dataDisease}
+        dataSymptoms={dataSymptom}
+      />
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
+      <EditRelations
+        isOpen={isEditOpen}
+        onClose={handleCancelEdit}
+        symptomsData={dataSymptom}
+        diseaseData={dataDisease}
+        onSubmit={handleEditSubmit}
+      />
       <Layout>
         <Navbar />
         <main className="m-10">
@@ -75,11 +146,15 @@ export const Relation = () => {
                   ))}
                 </tr>
               </thead>
-              {isLoading ? (
-                <div>Loading</div>
-              ) : (
-                <tbody className="divide-y divide-gray-200 ">
-                  {data?.data?.map((id_gejala, index) => (
+              <tbody className="divide-y divide-gray-200">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={tableHead.length} className="text-center py-4">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  data?.data?.map((id_gejala, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 w-[5%] whitespace-normal text-sm font-medium text-gray-800 ">
                         {offset + index + 1}
@@ -100,22 +175,22 @@ export const Relation = () => {
                         <button
                           type="button"
                           className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none pr-3"
-                          //   onClick={() => editSymptom(id_gejala.id_gejala)}
+                          onClick={() => EditRelation(id_gejala.id_gejala)}
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none"
-                          //   onClick={() => deleteSymptom(id_gejala.id_gejala)}
+                          onClick={() => deleteRelation(id_gejala.id_gejala)}
                         >
                           Delete
                         </button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              )}
+                  ))
+                )}
+              </tbody>
             </table>
           </div>
           <div className="flex w-full justify-end gap-4 mt-4 pr-2">

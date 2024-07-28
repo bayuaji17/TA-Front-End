@@ -7,7 +7,6 @@ export const Dashboard = () => {
   const {data:dataDisease} = useFetch("/disease")
   const {data:dataSymptom} = useFetch("/symptoms")
   const {data:dataRules} = useFetch("/rules")
-
   return (
     <div>
       <Layout>
@@ -27,20 +26,20 @@ export const Dashboard = () => {
                 <h1 className="text-black font-bold text-3xl text-center uppercase">
                   Disease
                 </h1>
-                <p className="text-7xl font-bold text-center text-black">{dataDisease.data.length}</p>
+                <p className="text-7xl font-bold text-center text-black">{dataDisease?.data?.length}</p>
               </Card>
             </div>
             <div className="col-span-4">
               <Card className="w-full h-52 p-8 bg-[#BFF6C3] flex items-center justify-center border-none">
                 <h1 className="text-black font-semibold text-6xl text-center uppercase">
-                  <span>{dataSymptom.pagination.totalGejala}</span> Symptom
+                  <span>{dataSymptom?.pagination?.totalGejala}</span> Symptom
                 </h1>
               </Card>
             </div>
             <div className="col-span-4">
               <Card className="w-full h-52 bg-[#c9a2e4] flex items-center justify-center border-none">
                 <h1 className="text-black font-semibold text-6xl text-center uppercase">
-                  <span>{dataRules.pagination.totalRules}</span> rules
+                  <span>{dataRules?.pagination?.totalRules}</span> rules
                 </h1>
               </Card>
             </div>

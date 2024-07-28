@@ -43,6 +43,6 @@ FormInput.propTypes = {
   height: PropTypes.string,
   width: PropTypes.string,
   required: PropTypes.bool,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   onChange: PropTypes.func,
 };

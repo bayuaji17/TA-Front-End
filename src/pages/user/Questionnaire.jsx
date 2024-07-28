@@ -51,11 +51,13 @@ export const Questionnaire = () => {
     { label: "Wanita", value: "Wanita" },
   ];
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
     try {
       const response = await postAnswers(formQuestions);
       setIsLoading(false);
+      console.log(response);
       navigate("/result");
       localStorage.setItem("resultUsers", JSON.stringify(response.data));
     } catch (error) {
@@ -75,109 +77,118 @@ export const Questionnaire = () => {
   return (
     <div>
       <LayoutQuestion>
-        <Card
-          className={
-            "w-[80dvw] xl:w-[60dvw] h-96 mx-auto border-cyan-500 py-5 px-10 mt-10 bg-white"
-          }
-        >
-          <div className="flex flex-col w-full">
-            <FormInput
-              label={"nama"}
-              type={"text"}
-              name={"Nama / Inisial"}
-              placeholder={"Input Your Name or Inisial"}
-              height={"h-10"}
-              width={"w-32"}
-              onChange={handleInputChange}
-            />
-            <FormInput
-              label={"umur"}
-              type={"number"}
-              name={"Umur"}
-              placeholder={"Input Your Age"}
-              height={"h-10"}
-              width={"w-32"}
-              onChange={handleInputChange}
-            />
-            <FormSelect
-              label={"jenisKelamin"}
-              name={"Jenis Kelamin"}
-              options={jenisKelamin}
-              onChange={handleInputChange}
-            />
-          </div>
-        </Card>
-        {dataQuestions?.data?.map((questions, index) => (
-          <div key={index}>
-            <Card
-              className={
-                "mt-4 w-[80dvw] xl:w-[60dvw] sm:h-[26rem] md:h-96 mx-auto p-4 sm:p-8 border-cyan-500 bg-white"
-              }
-            >
-              <h1 className="text-sm sm:text-base md:text-lg lg:text-2xl text-center font-bold text-wrap px-10">
-                {questions.pertanyaan}
-              </h1>
-              <div className="flex flex-row justify-center gap-8 pt-10 pb-5 sm:pb-0 sm:pt-20 max-w-full h-full">
-                <div className="flex flex-col gap-4">
-                  <RadioButton
-                    label={"Tidak Pernah"}
-                    name={questions.kode_gejala}
-                    id={`1-${questions.kode_gejala}`}
-                    value={0}
-                    onChange={(e) =>
-                      handleAnswerChange(e, questions.kode_gejala, 0)
-                    }
-                  />
-                  <RadioButton
-                    label={"Kadang Kadang"}
-                    name={questions.kode_gejala}
-                    id={`2-${questions.kode_gejala}`}
-                    value={0.33}
-                    onChange={(e) =>
-                      handleAnswerChange(e, questions.kode_gejala, 0.33)
-                    }
-                  />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <RadioButton
-                    label={"Lumayan Sering"}
-                    name={questions.kode_gejala}
-                    id={`3-${questions.kode_gejala}`}
-                    value={0.67}
-                    onChange={(e) =>
-                      handleAnswerChange(e, questions.kode_gejala, 0.67)
-                    }
-                  />
-                  <RadioButton
-                    label={"Sering Sekali"}
-                    name={questions.kode_gejala}
-                    id={`4-${questions.kode_gejala}`}
-                    value={1}
-                    onChange={(e) =>
-                      handleAnswerChange(e, questions.kode_gejala, 1)
-                    }
-                  />
-                </div>
-              </div>
-            </Card>
-          </div>
-        ))}
-        <div className="max-w-full flex justify-center pt-4">
-          <Button
-            type={"submit"}
-            label={"Submit"}
-            variant={"bg-cyan-600"}
+        <form onSubmit={handleSubmit}>
+          <Card
             className={
-              "tracking-wider uppercase shadow-lg hover:scale-105 transition-all duration-[670ms] mb-14"
+              "w-[80dvw] xl:w-[60dvw] h-96 mx-auto border-cyan-500 py-5 px-10 mt-10 bg-white"
             }
-            textColor={"text-white"}
-            fontBold={"font-bold"}
-            width={"w-[80dvw]"}
-            height={"h-14"}
-            borderRadius={"rounded-lg"}
-            onClick={handleSubmit}
-          />
-        </div>
+          >
+            <div className="flex flex-col w-full">
+              <FormInput
+                label={"nama"}
+                type={"text"}
+                name={"Nama / Inisial"}
+                placeholder={"Input Your Name or Inisial"}
+                height={"h-10"}
+                width={"w-32"}
+                onChange={handleInputChange}
+                required
+              />
+              <FormInput
+                label={"umur"}
+                type={"number"}
+                name={"Umur"}
+                placeholder={"Input Your Age"}
+                height={"h-10"}
+                width={"w-32"}
+                onChange={handleInputChange}
+                required
+              />
+              <FormSelect
+                label={"jenisKelamin"}
+                name={"Jenis Kelamin"}
+                options={jenisKelamin}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </Card>
+          {dataQuestions?.data?.map((questions, index) => (
+            <div key={index}>
+              <Card
+                className={
+                  "mt-4 w-[80dvw] xl:w-[60dvw] sm:h-[26rem] md:h-96 mx-auto p-4 sm:p-8 border-cyan-500 bg-white"
+                }
+              >
+                <h1 className="text-sm sm:text-base md:text-lg lg:text-2xl text-center font-bold text-wrap px-10">
+                  {questions.pertanyaan}
+                </h1>
+                <div className="flex flex-row justify-center gap-8 pt-10 pb-5 sm:pb-0 sm:pt-20 max-w-full h-full">
+                  <div className="flex flex-col gap-4">
+                    <RadioButton
+                      label={"Tidak Pernah"}
+                      name={questions.kode_gejala}
+                      id={`1-${questions.kode_gejala}`}
+                      value={0}
+                      onChange={(e) =>
+                        handleAnswerChange(e, questions.kode_gejala, 0)
+                      }
+  
+                    />
+                    <RadioButton
+                      label={"Kadang Kadang"}
+                      name={questions.kode_gejala}
+                      id={`2-${questions.kode_gejala}`}
+                      value={0.33}
+                      onChange={(e) =>
+                        handleAnswerChange(e, questions.kode_gejala, 0.33)
+                      }
+          
+                    />
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <RadioButton
+                      label={"Lumayan Sering"}
+                      name={questions.kode_gejala}
+                      id={`3-${questions.kode_gejala}`}
+                      value={0.67}
+                      onChange={(e) =>
+                        handleAnswerChange(e, questions.kode_gejala, 0.67)
+                      }
+                
+                    />
+                    <RadioButton
+                      label={"Sering Sekali"}
+                      name={questions.kode_gejala}
+                      id={`4-${questions.kode_gejala}`}
+                      value={1}
+                      onChange={(e) =>
+                        handleAnswerChange(e, questions.kode_gejala, 1)
+                      }
+                      
+                    />
+                  </div>
+                </div>
+              </Card>
+            </div>
+          ))}
+          <div className="max-w-full flex justify-center pt-4">
+            <Button
+              type={"submit"}
+              label={"Submit"}
+              variant={"bg-cyan-600"}
+              className={
+                "tracking-wider uppercase shadow-lg hover:scale-105 transition-all duration-[670ms] mb-14"
+              }
+              textColor={"text-white"}
+              fontBold={"font-bold"}
+              width={"w-[80dvw]"}
+              height={"h-14"}
+              borderRadius={"rounded-lg"}
+              // onClick={handleSubmit}
+            />
+          </div>
+        </form>
       </LayoutQuestion>
     </div>
   );

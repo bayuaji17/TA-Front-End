@@ -7,6 +7,7 @@ export const FormSelect = ({
   options,
   selectedValue,
   defaulValue,
+  required
 }) => {
   return (
     <div className="flex flex-col">
@@ -21,6 +22,7 @@ export const FormSelect = ({
           onChange={onChange}
           value={selectedValue}
           defaultValue={defaulValue}
+          required={required}
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
@@ -39,9 +41,10 @@ FormSelect.propTypes = {
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      value: PropTypes.string,
+      label: PropTypes.string,
     })
   ).isRequired,
   selectedValue: PropTypes.string,
+  required: PropTypes.bool
 };

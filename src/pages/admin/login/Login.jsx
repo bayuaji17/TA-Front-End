@@ -12,9 +12,9 @@ export const Login = () => {
     username: "",
     password: "",
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -22,29 +22,29 @@ export const Login = () => {
   };
 
   const handleLoginSubmit = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const formAdmin = {
       username: formLogin.username,
       password: formLogin.password,
     };
     try {
       const response = await loginAdmin(formAdmin);
-      setIsLoading(false)
-      CookieStorage.set(CookieKeys.AuthToken,response?.data?.token)
-      toast.success(response?.data?.message)
-      navigate("/dashboard")
+      setIsLoading(false);
+      CookieStorage.set(CookieKeys.AuthToken, response?.data?.token);
+      toast.success(response?.data?.message);
+      navigate("/dashboard");
     } catch (error) {
-        setIsLoading(false)
+      setIsLoading(false);
       toast.error(error.response?.data?.message);
     }
   };
 
   return (
     <>
-      <div className="flex flex-col w-screen h-screen justify-center items-center font-lato bg-cyan-200">
+      <div className="flex flex-col w-screen h-screen justify-center items-center font-lato bg-slate-700">
         <Card
           className={
-            "w-[90vw] sm:w-[77vw] md:w-[60vw] xl:w-[50vw] h-[80vh] py-4 px-10 sm:px-24 bg-white/30 shadow-lg shadow-teal-600 border-none"
+            "w-[90vw] sm:w-[77vw] md:w-[60vw] xl:w-[50vw] h-[80vh] py-4 px-10 sm:px-24 bg-blue-300 shadow-lg shadow-teal-600 border-none"
           }
         >
           <h1 className="text-5xl text-center mb-16 text-zinc-700 font-extrabold uppercase tracking-widest mt-4">
@@ -77,7 +77,9 @@ export const Login = () => {
           <Button
             label={isLoading ? "Loading" : "LOGIN"}
             variant={"bg-gradient-to-r from-pink-500 to-violet-600"}
-            className={"tracking-wider uppercase shadow-lg hover:scale-105 transition-all duration-[650ms] "}
+            className={
+              "tracking-wider uppercase shadow-lg hover:scale-105 transition-all duration-[650ms] "
+            }
             textColor={"text-white"}
             fontBold={"font-bold"}
             width={"w-[100%]"}

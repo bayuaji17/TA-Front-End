@@ -4,14 +4,23 @@ import useFetch from "../../../services/useFetch";
 import { useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import { AddRules } from "../../../components/AddRules";
+import { ConfirmModal } from "../../../components/ConfirmModal";
+import { deletedRules } from "../../../services/symptom";
+import { toast } from "react-toastify";
+import { EditRules } from "../../../components/EditRules";
 export const RulesDisease = () => {
   const [page, setPage] = useState(1);
+  const [selectedRules, setSelectedRules] = useState(null);
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const dialogRef = useRef(null);
-  const { data, error, isLoading } = useFetch(`/rules?page=${page}&limit=6`);
+  const { data } = useFetch(`/rules?page=${page}&limit=6`);
+  const { data: dataRulesById } = useFetch(`/rules/${selectedRules}`);
   const { mutate } = useSWRConfig();
   const totalPages = data?.pagination?.totalPages;
   const offset = data?.pagination?.offset;
-  console.log(data);
+  mutate(`/rules/${selectedRules}`);
+
   const handlePrev = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -35,15 +44,59 @@ export const RulesDisease = () => {
       dialogRef.current.close();
     }
   };
-
   const openDialog = () => {
     if (dialogRef.current) {
       dialogRef.current.showModal();
     }
   };
+  // *Hapus Rules
+  const deleteRules = (id) => {
+    setSelectedRules(id);
+    setConfirmOpen(true);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await deletedRules(selectedRules);
+      console.log(response);
+      toast.success(response.data?.message);
+      setConfirmOpen(false);
+      mutate(`/rules?page=${page}&limit=6`);
+    } catch (error) {
+      setConfirmOpen(false);
+      toast.error("error");
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
+    setSelectedRules(null);
+  };
+  // *Hapus Rules
+  // *EditRules
+  const editRules = (id) => {
+    setSelectedRules(id);
+    setIsEditOpen(true);
+  };
+  const handleCancelEdit = () => {
+    setIsEditOpen(false);
+    setSelectedRules(null);
+    mutate(`/rules?page=${page}&limit=6`);
+  };
+  // *EditRules
+
   return (
     <div>
-      <AddRules ref={dialogRef} onClick={handleCancel}/>
+      <AddRules ref={dialogRef} onClick={handleCancel} page={page} />
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
+      <EditRules
+        isOpen={isEditOpen}
+        onClose={handleCancelEdit}
+        initialData={dataRulesById}
+      />
       <Layout>
         <Navbar />
         <main className="m-10">
@@ -92,14 +145,14 @@ export const RulesDisease = () => {
                       <button
                         type="button"
                         className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 pr-3"
-                        // onClick={() => editDisease(id_penyakit.id_penyakit)}
+                        onClick={() => editRules(id_penyakit.kode_aturan)}
                       >
                         Edit
                       </button>
                       <button
                         type="button"
                         className="inline-flex items-center text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none "
-                        // onClick={() => deleteDiseases(id_penyakit.id_penyakit)}
+                        onClick={() => deleteRules(id_penyakit.kode_aturan)}
                       >
                         Delete
                       </button>

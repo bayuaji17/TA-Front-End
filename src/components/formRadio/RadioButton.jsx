@@ -17,7 +17,7 @@ export const RadioButton = ({
         value={value}
         onChange={onChange}
         className="peer hidden"
-        
+        required
       />
       <label
         htmlFor={id}

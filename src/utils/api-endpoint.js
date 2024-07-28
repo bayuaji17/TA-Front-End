@@ -4,4 +4,5 @@ export const API_ENDPOINT = {
     LOGIN: "/login",
     RULES: "/rules",
     ANSWER: "/answer",
+    RELATION: "/relation",
 }

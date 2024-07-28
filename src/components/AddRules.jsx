@@ -5,8 +5,9 @@ import { postRules } from "../services/symptom";
 import useFetch from "../services/useFetch";
 import { FormSelect } from "./form/FormSelect";
 import { toast } from "react-toastify";
+import { useSWRConfig } from "swr";
 
-export const AddRules = React.forwardRef(({ onClick }, ref) => {
+export const AddRules = React.forwardRef(({ onClick, page }, ref) => {
   const [formData, setFormData] = useState({
     kode_aturan: "",
     kode_gejala: "",
@@ -14,10 +15,10 @@ export const AddRules = React.forwardRef(({ onClick }, ref) => {
   });
   const [disease, setDisease] = useState([]);
   const [symptoms, setSymptoms] = useState([]);
-
+  useFetch(`/symptoms?page=${page}&limit=7`);
+  const { mutate } = useSWRConfig();
   const { data: dataDisease } = useFetch("/disease");
   const { data: dataSymptoms } = useFetch("/symptoms?limit=100");
-  console.log(dataSymptoms);
 
   useEffect(() => {
     if (dataDisease) {
@@ -48,14 +49,18 @@ export const AddRules = React.forwardRef(({ onClick }, ref) => {
   const handleSubmit = async () => {
     try {
       const response = await postRules(formData);
-      console.log(response);
-      toast.success()
+      toast.success(response.data?.message);
+      if (ref.current) {
+        ref.current.close();
+      }
+      mutate(`/symptoms?page=${page}&limit=7`)
     } catch (error) {
-      console.log(error.response?.data?.status);
+      toast.error(error.response?.data?.status);
+      if (ref.current) {
+        ref.current.close();
+      }
     }
   };
-
-
 
   return (
     <div>
