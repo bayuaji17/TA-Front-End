@@ -3,7 +3,6 @@ import {
   SignOut,
   Stethoscope,
   Thermometer,
-  Users,
   Virus,
   WebhooksLogo,
 } from "@phosphor-icons/react";
@@ -97,20 +96,6 @@ export const Sidebar = () => {
               </span>
             </li>
           </Link>
-          {/* <Link to={"/patient"}>
-            <li
-            className={`h-14 my-4 py-3 text-lg hover:border-2 rounded-3xl px-4 border-black  hover:cursor-pointer transition duration-300 hover:shadow-[0.4rem_0.4rem_0_rgba(0,0,0,0.8)] ${
-              location.pathname == "/patient"
-              ? "border-2 border-cyan-800 shadow-[0.4rem_0.4rem_0_rgb(22,78,99)]"
-              : ""
-              }`}
-              >
-              <span className="flex items-center gap-4 font-medium text-white">
-              <Users size={28} color="white" weight="light" />
-                Patient
-              </span>
-            </li>
-            </Link> */}
         </ul>
         <div className="w-72 p-4 pt-8">
           <div

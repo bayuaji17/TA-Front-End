@@ -12,17 +12,6 @@ export const EditRelations = ({ isOpen, onClose, onSubmit, symptomsData,diseaseD
     nilai_cf: "",
   });
 
-  //   useEffect(() => {
-  //     if (initialData) {
-  //       setFormEdit({
-  //           kode_gejala: initialData.kode_gejala,
-  //           kode_penyakit: initialData.kode_penyakit,
-  //       });
-  //     }
-  //   }, [initialData]);
-  console.log(symptomsData);
-  console.log(diseaseData);
-  console.log(formEdit);
   useEffect(() => {
     if (symptomsData) {
       const symptomsOptions = symptomsData?.data?.map((symptoms) => ({
