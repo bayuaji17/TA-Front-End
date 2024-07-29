@@ -16,10 +16,10 @@ export const RoutesPages = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/loginadmin" element={<Login />} />
+        <Route path="loginadmin" element={<Login />} />
         {/* Admin Area Page */}
         <Route
-          path="/dashboard"
+          path="dashboard"
           element={
             <Protected>
               <Dashboard />
@@ -28,7 +28,7 @@ export const RoutesPages = () => {
         />
 
         <Route
-          path="/symptom"
+          path="symptom"
           element={
             <Protected>
               <Symptom />
@@ -36,7 +36,7 @@ export const RoutesPages = () => {
           }
         />
         <Route
-          path="/disease"
+          path="disease"
           element={
             <Protected>
               <Disease />
@@ -44,7 +44,7 @@ export const RoutesPages = () => {
           }
         />
         <Route
-          path="/rules"
+          path="rules"
           element={
             <Protected>
               <RulesDisease />
@@ -52,7 +52,7 @@ export const RoutesPages = () => {
           }
         />
         <Route
-          path="/relation"
+          path="relation"
           element={
             <Protected>
               <Relation />
@@ -61,8 +61,8 @@ export const RoutesPages = () => {
         />
         {/*End Admin Area Page */}
         {/* User Area Pages */}
-        <Route path="/questionnaire" element={<Questionnaire />} />
-        <Route path="/result" element={<ResultQuestions />} />
+        <Route path="questionnaire" element={<Questionnaire />} />
+        <Route path="result" element={<ResultQuestions />} />
         {/* End User Area Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
