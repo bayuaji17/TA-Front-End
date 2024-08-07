@@ -8,7 +8,10 @@ import { ConfirmModal } from "../../../components/ConfirmModal";
 import { deletedRules } from "../../../services/symptom";
 import { toast } from "react-toastify";
 import { EditRules } from "../../../components/EditRules";
+import RulesPDF from "../../../components/pdf/RulesPDF";
+import { useReactToPrint } from "react-to-print";
 export const RulesDisease = () => {
+  const rulesDiseaseRef = useRef();
   const [page, setPage] = useState(1);
   const [selectedRules, setSelectedRules] = useState(null);
   const [isConfirmOpen, setConfirmOpen] = useState(false);
@@ -20,7 +23,10 @@ export const RulesDisease = () => {
   const totalPages = data?.pagination?.totalPages;
   const offset = data?.pagination?.offset;
   mutate(`/rules/${selectedRules}`);
-
+  const handlePrintRules = useReactToPrint({
+    content: () => rulesDiseaseRef.current,
+    documentTitle: "Laporan Data Aturan Penyakit",
+  });
   const handlePrev = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -100,7 +106,14 @@ export const RulesDisease = () => {
       <Layout>
         <Navbar />
         <main className="m-10">
-          <div className="inline-flex justify-end w-full mb-2 ">
+          <div className="inline-flex justify-end w-full mb-2 gap-2">
+
+            <button
+              className="bg-cyan-600 text-white rounded-lg h-10 w-32 font-semibold hover:bg-cyan-800 hover:text-white hover:font-bold hover:border-none"
+              onClick={handlePrintRules}
+            >
+              Print Report
+            </button>
             <button
               className="border-2 border-cyan-700 h-10 w-32 rounded-lg hover:bg-cyan-500 hover:text-white hover:border-none hover:font-bold"
               onClick={openDialog}
@@ -179,6 +192,9 @@ export const RulesDisease = () => {
             </button>
           </div>
         </main>
+        <div className="hidden">
+          <RulesPDF ref={rulesDiseaseRef} />
+        </div>
       </Layout>
     </div>
   );

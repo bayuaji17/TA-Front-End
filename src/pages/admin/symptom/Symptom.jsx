@@ -9,8 +9,11 @@ import { toast } from "react-toastify";
 import { EditSymptom } from "../../../components/EditSymptom";
 import { putSymptoms } from "../../../services/symptom";
 import { useSWRConfig } from "swr";
+import SymptomPDF from "../../../components/pdf/SymptomPDF";
+import { useReactToPrint } from "react-to-print";
 
 export const Symptom = () => {
+  const symptomRef = useRef();
   const [page, setPage] = useState(1);
   const dialogRef = useRef(null);
   const [isConfirmOpen, setConfirmOpen] = useState(false);
@@ -21,6 +24,10 @@ export const Symptom = () => {
   const totalPages = data?.pagination?.totalPages;
   const offset = data?.pagination?.offset;
 
+  const handlePrintSymptom = useReactToPrint({
+    content: () => symptomRef.current,
+    documentTitle: "Laporan Data Gejala",
+  });
   if (error) {
     return "error";
   }
@@ -117,7 +124,13 @@ export const Symptom = () => {
       <Layout>
         <Navbar />
         <div className="m-10">
-          <div className="inline-flex justify-end w-full mb-2 ">
+          <div className="inline-flex justify-end w-full mb-2 gap-4">
+            <button
+              className="bg-cyan-600 text-white rounded-lg h-10 w-32 font-semibold hover:bg-cyan-800 hover:text-white hover:font-bold hover:border-none"
+              onClick={handlePrintSymptom}
+            >
+              Print Report
+            </button>
             <button
               className="border-2 border-cyan-700 rounded-lg h-10 w-32 hover:bg-cyan-600 hover:text-white hover:font-bold hover:border-none"
               onClick={openDialog}
@@ -127,7 +140,7 @@ export const Symptom = () => {
           </div>
           <div className="border rounded-lg w-[75dvw] h-[65dvh] overflow-scroll">
             <table className=" divide-y divide-gray-200 w-full h-full">
-              <thead className="bg-cyan-700">
+              <thead className="bg-cyan-600">
                 <tr>
                   {tableHead.map((head) => (
                     <th
@@ -146,10 +159,10 @@ export const Symptom = () => {
                 <tbody className="divide-y divide-gray-200 ">
                   {data?.data?.map((id_gejala, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 w-[10%] border-r-2 whitespace-normal text-sm font-medium text-gray-800 ">
+                      <td className="px-6 py-4 w-[10%] whitespace-normal text-sm font-medium text-gray-800 ">
                         {offset + index + 1}
                       </td>
-                      <td className="px-6 py-4 w-[10%] border-r-2 whitespace-normal text-sm text-gray-800 ">
+                      <td className="px-6 py-4 w-[10%] whitespace-normal text-sm text-gray-800 ">
                         {id_gejala.kode_gejala}
                       </td>
                       <td className="px-6 py-4 w-[20%] whitespace-normal text-sm text-gray-800 ">
@@ -196,6 +209,9 @@ export const Symptom = () => {
               Next
             </button>
           </div>
+        </div>
+        <div className="hidden">
+          <SymptomPDF ref={symptomRef} />
         </div>
       </Layout>
     </div>

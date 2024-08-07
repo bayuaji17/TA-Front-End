@@ -5,7 +5,6 @@ export const RadioButton = ({
   id,
   value,
   onChange,
-  borderColor,
   className,
 }) => {
   return (
@@ -21,7 +20,7 @@ export const RadioButton = ({
       />
       <label
         htmlFor={id}
-        className={`border-2 ${borderColor} md:w-64 lg:w-72 p-4 rounded-2xl font-semibold text-sm sm:text-lg md:text-xl hover:bg-cyan-600 hover:text-white  peer-checked:bg-cyan-600 peer-checked:text-white ${className} text-center cursor-pointer`}
+        className={`border-2 border-cyan-600 md:w-64 lg:w-72 p-4 rounded-2xl font-semibold text-sm sm:text-lg md:text-xl hover:bg-cyan-600 hover:text-white  peer-checked:bg-cyan-600 peer-checked:text-white ${className} text-center cursor-pointer`}
       >
         {label}
       </label>
@@ -35,6 +34,5 @@ RadioButton.propTypes = {
   id: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   className: PropTypes.string,
-  borderColor: PropTypes.string,
   onChange: PropTypes.func,
 };

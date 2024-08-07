@@ -12,7 +12,10 @@ import { toast } from "react-toastify";
 import { ConfirmModal } from "../../../components/ConfirmModal";
 import { EditDisease } from "../../../components/EditDisease";
 import { useSWRConfig } from "swr";
+import DiseasePDF from "../../../components/pdf/DiseasePDF";
+import { useReactToPrint } from "react-to-print";
 export const Disease = () => {
+  const diseaseRef = useRef();
   // eslint-disable-next-line no-unused-vars
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmOpen, setConfirmOpen] = useState(false);
@@ -26,7 +29,10 @@ export const Disease = () => {
   const { data, error, isLoading } = useFetch("/disease");
   const { mutate } = useSWRConfig();
   const tableHead = ["No", "Disease Code", "Disease Name", "Action"];
-
+  const handlePrintDisease = useReactToPrint({
+    content: () => diseaseRef.current,
+    documentTitle: "Laporan Data Penyakit",
+  });
   if (error) {
     return (
       <div>
@@ -168,7 +174,13 @@ export const Disease = () => {
       <Layout>
         <Navbar />
         <div className="m-10">
-          <div className="flex mb-5 w-full justify-end">
+          <div className="flex mb-5 w-full justify-end gap-2">
+          <button
+              className="bg-cyan-600 text-white rounded-lg h-10 w-32 font-semibold hover:bg-cyan-800 hover:text-white hover:font-bold hover:border-none"
+              onClick={handlePrintDisease}
+            >
+              Print Report
+            </button>
             <button
               className="border-2 border-cyan-700 h-10 w-32 rounded-lg hover:bg-cyan-500 hover:text-white hover:border-none hover:font-bold"
               onClick={showDialog}
@@ -226,6 +238,9 @@ export const Disease = () => {
             </table>
           </div>
           {/* //!TABLE */}
+        </div>
+        <div className="hidden">
+          <DiseasePDF ref={diseaseRef}/>
         </div>
       </Layout>
     </div>

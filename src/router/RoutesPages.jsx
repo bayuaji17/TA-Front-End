@@ -15,6 +15,7 @@ export const RoutesPages = () => {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route path="/" element={<Home />} />
         <Route path="loginadmin" element={<Login />} />
         {/* Admin Area Page */}

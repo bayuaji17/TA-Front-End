@@ -8,8 +8,11 @@ import { ConfirmModal } from "../../../components/ConfirmModal";
 import { deletedRelation, putRelation } from "../../../services/symptom";
 import { toast } from "react-toastify";
 import { EditRelations } from "../../../components/EditRelations";
+import { useReactToPrint } from "react-to-print";
+import SymptomCFpdf from "../../../components/pdf/SymptomCFpdf";
 
 export const Relation = () => {
+  const symptomCFRef = useRef();
   const [page, setPage] = useState(1);
   const dialogRef = useRef(null);
   const [selectedRelation, setSelectedRelation] = useState(null);
@@ -100,6 +103,10 @@ export const Relation = () => {
   };
 
   // * EDIT
+  const handlePrintSymptomCF = useReactToPrint({
+    content: () => symptomCFRef.current,
+    documentTitle: "Laporan Data Nilai Gejala Certainty Factor",
+  });
   return (
     <div>
       <AddRelations
@@ -123,7 +130,13 @@ export const Relation = () => {
       <Layout>
         <Navbar />
         <main className="m-10">
-          <div className="inline-flex justify-end w-full mb-2 ">
+          <div className="inline-flex justify-end w-full mb-2 gap-2">
+            <button
+              className="bg-cyan-600 text-white rounded-lg h-10 w-32 font-semibold hover:bg-cyan-800 hover:text-white hover:font-bold hover:border-none"
+              onClick={handlePrintSymptomCF}
+            >
+              Print Report
+            </button>
             <button
               className="border-2 border-cyan-700 rounded-lg h-10 w-32 hover:bg-cyan-600 hover:text-white hover:font-bold hover:border-none"
               onClick={openDialog}
@@ -133,7 +146,7 @@ export const Relation = () => {
           </div>
           <div className="border rounded-lg w-[75dvw] h-[65dvh] overflow-scroll">
             <table className=" divide-y divide-gray-200 w-full h-full">
-              <thead className="bg-cyan-700">
+              <thead className="bg-cyan-600">
                 <tr>
                   {tableHead.map((head) => (
                     <th
@@ -210,6 +223,9 @@ export const Relation = () => {
             </button>
           </div>
         </main>
+        <div className="hidden">
+          <SymptomCFpdf ref={symptomCFRef} />
+        </div>
       </Layout>
     </div>
   );

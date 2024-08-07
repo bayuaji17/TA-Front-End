@@ -50,7 +50,7 @@ export const Questionnaire = () => {
     { label: "Pria", value: "Pria" },
     { label: "Wanita", value: "Wanita" },
   ];
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -60,6 +60,7 @@ export const Questionnaire = () => {
       console.log(response);
       navigate("/result");
       localStorage.setItem("resultUsers", JSON.stringify(response.data));
+      localStorage.setItem("questions", JSON.stringify(dataQuestions));
     } catch (error) {
       setIsLoading(false);
       console.log(error);
