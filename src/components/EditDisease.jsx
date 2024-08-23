@@ -30,7 +30,8 @@ export const EditDisease = ({ isOpen, onClose, onSubmit, initialData }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-700 bg-opacity-50">
       <div className="bg-white w-[40rem] h-[30rem] rounded-lg border-2 border-cyan-700">
         <h1 className="font-bold text-xl text-end pr-6 pt-4">Edit Symptom</h1>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center max-w-[40rem]">
+          {/* <input type="text" className="w-full border-2" placeholder="test" /> */}
           <FormInput
             label={"kode_penyakit"}
             type={"text"}

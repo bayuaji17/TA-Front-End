@@ -1,5 +1,7 @@
 import { forwardRef } from "react";
 import useFetch from "../../services/useFetch";
+import { jwtDecode } from "jwt-decode";
+import { CookieKeys, CookieStorage } from "../../utils/cookies";
 
 const RulesPDF = forwardRef((props, ref) => {
   const { data } = useFetch("/rules?page=1&limit=100");
@@ -19,7 +21,8 @@ const RulesPDF = forwardRef((props, ref) => {
     day: "numeric",
   };
   let formattedDate = now.toLocaleDateString("id-ID", options);
-
+  const token = CookieStorage.get(CookieKeys.AuthToken)
+  const decode = jwtDecode(token)
   return (
     <div ref={ref}>
       <div className="my-10 px-10">
@@ -63,7 +66,7 @@ const RulesPDF = forwardRef((props, ref) => {
       <div className="flex flex-col items-end w-full">
         <p className="pr-10">Jakarta, {formattedDate}</p>
         <p className="pr-10 pt-24">
-          (<span className="px-24"></span> )
+        (<span className="px-5">{decode.nama_admin}</span> )
         </p>
       </div>
     </div>

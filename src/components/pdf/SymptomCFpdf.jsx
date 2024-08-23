@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import useFetch from "../../services/useFetch";
-import "./print.css"
+import { CookieKeys, CookieStorage } from "../../utils/cookies";
+import { jwtDecode } from "jwt-decode";
 const SymptomCFpdf = forwardRef((props, ref) => {
   const { data: dataRelations } = useFetch("relation?page=1&limit=200");
   const now = new Date();
@@ -19,6 +20,8 @@ const SymptomCFpdf = forwardRef((props, ref) => {
     day: "numeric",
   };
   let formattedDate = now.toLocaleDateString("id-ID", option);
+  const token = CookieStorage.get(CookieKeys.AuthToken)
+  const decode = jwtDecode(token)
 
   return (
     <div ref={ref}>
@@ -101,7 +104,7 @@ const SymptomCFpdf = forwardRef((props, ref) => {
       <div className="flex flex-col items-end w-full pt-10">
         <p className="pr-10">Jakarta, {formattedDate}</p>
         <p className="pr-10 pt-24">
-          (<span className="px-[4.7rem]"></span> )
+        (<span className="px-5">{decode.nama_admin}</span> )
         </p>
       </div>
     </div>

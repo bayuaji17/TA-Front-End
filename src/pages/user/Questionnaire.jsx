@@ -91,7 +91,7 @@ export const Questionnaire = () => {
                 name={"Nama / Inisial"}
                 placeholder={"Input Your Name or Inisial"}
                 height={"h-10"}
-                width={"w-32"}
+                width={"w-full"}
                 onChange={handleInputChange}
                 required
               />
@@ -101,7 +101,7 @@ export const Questionnaire = () => {
                 name={"Umur"}
                 placeholder={"Input Your Age"}
                 height={"h-10"}
-                width={"w-32"}
+                width={"w-full"}
                 onChange={handleInputChange}
                 required
               />
